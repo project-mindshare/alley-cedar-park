@@ -94,6 +94,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--cream);m
 .chip-hack{background:#2d1a30;color:#cc8ae8}.chip-review{background:#0d3028;color:#5ed4b8}
 .chip-anime{background:#201a3d;color:#9b8ae8}
 .detail-topic{font-size:16px;font-weight:600;color:var(--cream);margin-bottom:1.25rem;line-height:1.45}
+.status-reset{background:none;border:none;font-size:11px;color:var(--cream3);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px;font-family:'DM Sans',sans-serif;line-height:1;margin-left:4px}
+.status-reset:hover{color:var(--red-text)}
 
 /* ACTION BAR */
 .action-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem}
@@ -549,8 +551,8 @@ Anyone else get stuck in a loop with their orders or am I the only one who needs
 const POST_DAYS=[2,3,6,7,8,9,10,13,14,15,16,17,20,21,22,23,24,27,28,29];
 const POST_MAP={};POSTS.forEach((p,i)=>{POST_MAP[POST_DAYS[i]]=i;});
 
+localStorage.removeItem('alley_cp_apr2026');
 let state={};
-try{state=JSON.parse(localStorage.getItem('alley_cp_apr2026')||'{}');}catch(e){}
 const save=()=>{try{localStorage.setItem('alley_cp_apr2026',JSON.stringify(state));}catch(e){}};
 
 function getPS(idx){
@@ -780,7 +782,10 @@ function renderDetail(idx){
   detail.innerHTML=`
     <div class="detail-top">
       <div><div class="detail-date">${post.date}</div><div class="detail-day">${post.day}</div></div>
-      <span class="status-badge badge-${ps.status}">${statusLabel(ps.status)}</span>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+        <span class="status-badge badge-${ps.status}">${statusLabel(ps.status)}</span>
+        ${ps.status!=='pending'?`<button class="status-reset" onclick="setStatus(${idx},'pending')">reset status</button>`:''}
+      </div>
     </div>
     <span class="type-chip chip-${post.type}">${post.typeLabel}</span>
     <div class="detail-topic">${post.topic}</div>
