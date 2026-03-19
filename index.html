@@ -94,8 +94,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--cream);m
 .chip-hack{background:#2d1a30;color:#cc8ae8}.chip-review{background:#0d3028;color:#5ed4b8}
 .chip-anime{background:#201a3d;color:#9b8ae8}
 .detail-topic{font-size:16px;font-weight:600;color:var(--cream);margin-bottom:1.25rem;line-height:1.45}
-.status-reset{background:none;border:none;font-size:11px;color:var(--cream3);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px;font-family:'DM Sans',sans-serif;line-height:1;margin-left:4px}
-.status-reset:hover{color:var(--red-text)}
+.status-reset{
+  background:none;
+  border:1px solid var(--border);
+  border-radius:20px;
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--cream3);
+  cursor:pointer;
+  padding:4px 10px;
+  font-family:'DM Sans',sans-serif;
+  line-height:1;
+  transition:border-color .15s,color .15s;
+  margin-top:2px;
+}
+.status-reset:hover{border-color:var(--red-text);color:var(--red-text);background:var(--red-bg)}
 
 /* ACTION BAR */
 .action-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem}
@@ -782,7 +797,7 @@ function renderDetail(idx){
   detail.innerHTML=`
     <div class="detail-top">
       <div><div class="detail-date">${post.date}</div><div class="detail-day">${post.day}</div></div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
         <span class="status-badge badge-${ps.status}">${statusLabel(ps.status)}</span>
         ${ps.status!=='pending'?`<button class="status-reset" onclick="setStatus(${idx},'pending')">reset status</button>`:''}
       </div>
