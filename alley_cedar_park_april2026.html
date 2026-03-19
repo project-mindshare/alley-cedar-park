@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Alley Cedar Park — April 2026 Content Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0f0d0b;--ink2:#1c1712;--ink3:#2a2118;
+  --surface:#231c14;--surface2:#2e2419;--surface3:#3a2e20;
+  --border:#3e3125;--border2:#574435;
+  --cream:#f5edde;--cream2:#c9b99a;--cream3:#8a7660;
+  --gold:#c8922a;--gold-light:#f5dfa0;--gold-dark:#9a6e1a;
+  --green-bg:#1e3d29;--green-text:#6fcc96;--green-border:#2d5c3a;
+  --red-bg:#3d1e1e;--red-text:#f0837a;--red-border:#5c2d2d;
+  --amber-bg:#3d2f1a;--amber-text:#e8b96a;--amber-border:#5c4a28;
+  --blue-bg:#1e2d3d;--blue-text:#7ab0e8;--blue-border:#2d4a5c;
+  --radius:12px;--radius-sm:8px;--radius-xs:5px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--cream);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.header{background:var(--ink2);border-bottom:1px solid var(--border);padding:0 1.5rem;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
+.logo-wrap{display:flex;align-items:center;gap:14px}
+.logo-img{height:34px;width:auto;object-fit:contain;display:block}
+.logo-divider{width:1px;height:26px;background:var(--border2);flex-shrink:0}
+.logo-sub-block{display:flex;flex-direction:column;gap:1px}
+.logo-sub{font-size:10px;color:var(--cream3);letter-spacing:.06em;text-transform:uppercase}
+.logo-sub-month{font-size:12px;color:var(--cream2);font-weight:500}
+.header-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.progress-wrap{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--cream3)}
+.progress-bar{width:100px;height:4px;background:var(--border2);border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;background:var(--gold);border-radius:10px;transition:width .4s ease}
+.hamburger{display:none;background:none;border:none;color:var(--cream2);font-size:22px;cursor:pointer;padding:4px;line-height:1}
+
+/* LEGEND */
+.legend{display:flex;gap:16px;padding:10px 1.5rem;background:var(--ink2);border-bottom:1px solid var(--border);overflow-x:auto;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--cream3);white-space:nowrap}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* MAIN LAYOUT: calendar | detail | fb-preview */
+.main{display:flex;height:calc(100vh - 105px)}
+.calendar-panel{width:260px;min-width:260px;border-right:1px solid var(--border);background:var(--ink2);overflow-y:auto;padding:1.25rem;transition:transform .3s ease;flex-shrink:0}
+.detail-panel{flex:1;overflow-y:auto;padding:2rem 1.5rem;background:var(--ink);min-width:0}
+.fb-sidebar{width:380px;min-width:380px;border-left:1px solid var(--border);background:var(--ink2);overflow-y:auto;padding:1.5rem 1.5rem;flex-shrink:0}
+
+/* CALENDAR */
+.cal-month{font-family:'Playfair Display',serif;font-size:22px;color:var(--cream);font-weight:700}
+.cal-year{font-size:12px;color:var(--cream3);margin-bottom:1rem}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-label{text-align:center;font-size:10px;color:var(--cream3);padding:4px 0;font-weight:600;letter-spacing:.04em}
+.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--radius-xs);font-size:12px;cursor:default;color:var(--cream3);position:relative;transition:background .15s}
+.cal-cell.has-post{cursor:pointer;color:var(--cream);font-weight:600}
+.cal-cell.has-post:hover{background:var(--surface2)}
+.cal-cell.active{background:var(--gold)!important;color:var(--ink)!important}
+.cal-cell.active .cal-status-dot{background:rgba(0,0,0,.3)!important}
+.cal-status-dot{width:4px;height:4px;border-radius:50%;margin-top:2px}
+.cal-cell.status-pending .cal-status-dot{background:var(--cream3)}
+.cal-cell.status-approved .cal-status-dot{background:var(--green-text)}
+.cal-cell.status-declined .cal-status-dot{background:var(--red-text)}
+.cal-cell.status-posted .cal-status-dot{background:var(--blue-text)}
+.cal-cell.status-revision .cal-status-dot{background:var(--amber-text)}
+.stats-bar{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+.stat-box{background:var(--surface);border-radius:var(--radius-sm);padding:12px 8px;text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:20px;font-weight:700}
+.stat-label{font-size:10px;color:var(--cream3);margin-top:2px;line-height:1.2}
+.stat-box.s-pending .stat-num{color:var(--cream2)}
+.stat-box.s-approved .stat-num{color:var(--green-text)}
+.stat-box.s-declined .stat-num{color:var(--red-text)}
+.stat-box.s-posted .stat-num{color:var(--blue-text)}
+
+/* EMPTY STATE */
+.empty-state{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--cream3);gap:14px;text-align:center;padding:2rem}
+.empty-tea{font-size:52px;opacity:.2}
+.empty-state p{font-size:15px}
+.empty-state small{font-size:12px;opacity:.5}
+
+/* POST DETAIL */
+.post-detail{max-width:640px;margin:0 auto}
+.detail-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap}
+.detail-date{font-family:'Playfair Display',serif;font-size:28px;color:var(--cream);font-weight:700}
+.detail-day{font-size:12px;color:var(--cream3);margin-top:3px}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge-pending{background:var(--surface3);color:var(--cream2)}
+.badge-approved{background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border)}
+.badge-declined{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border)}
+.badge-posted{background:var(--blue-bg);color:var(--blue-text);border:1px solid var(--blue-border)}
+.badge-revision{background:var(--amber-bg);color:var(--amber-text);border:1px solid var(--amber-border)}
+.type-chip{display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;margin-bottom:8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.chip-controversy{background:#3d1e0e;color:#f0926a}.chip-question{background:#1a2a3d;color:#7ab0e8}
+.chip-story{background:#1e3020;color:#6fcc96}.chip-poll{background:#3d2f0a;color:#e8c56a}
+.chip-hack{background:#2d1a30;color:#cc8ae8}.chip-review{background:#0d3028;color:#5ed4b8}
+.chip-anime{background:#201a3d;color:#9b8ae8}
+.detail-topic{font-size:16px;font-weight:600;color:var(--cream);margin-bottom:1.25rem;line-height:1.45}
+
+/* ACTION BAR */
+.action-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem}
+.btn{padding:9px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;font-family:'DM Sans',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-approve{background:transparent;color:var(--green-text);border-color:var(--green-border)}
+.btn-approve:hover,.btn-approve.active{background:var(--green-bg);border-color:#3d7a4e}
+.btn-decline{background:transparent;color:var(--red-text);border-color:var(--red-border)}
+.btn-decline:hover,.btn-decline.active{background:var(--red-bg);border-color:#7a3d3d}
+.btn-revision{background:transparent;color:var(--amber-text);border-color:var(--amber-border)}
+.btn-revision:hover,.btn-revision.active{background:var(--amber-bg);border-color:#7a6035}
+
+/* CARD */
+.card{background:var(--ink2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.card-label{font-size:10px;color:var(--cream3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:600}
+.caption-text{font-size:15px;line-height:1.9;color:var(--cream2);white-space:pre-wrap}
+.caption-edit-btn{background:none;border:1px solid var(--border2);color:var(--cream3);cursor:pointer;font-size:11px;padding:4px 10px;border-radius:var(--radius-xs);font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s;margin-left:auto;display:flex;align-items:center;gap:5px}
+.caption-edit-btn:hover{border-color:var(--gold);color:var(--gold)}
+.caption-label-row{display:flex;align-items:center;margin-bottom:12px}
+.caption-label-row .card-label{margin-bottom:0}
+.caption-textarea{width:100%;font-size:15px;line-height:1.9;color:var(--cream2);background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-family:'DM Sans',sans-serif;resize:vertical;min-height:180px}
+.caption-textarea:focus{outline:none;border-color:var(--gold)}
+.caption-edit-actions{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
+.caption-save-btn{background:var(--gold);color:var(--ink);border:none;border-radius:var(--radius-xs);padding:6px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+.caption-save-btn:hover{background:var(--gold-dark);color:var(--cream)}
+.caption-cancel-btn{background:none;color:var(--cream3);border:1px solid var(--border2);border-radius:var(--radius-xs);padding:6px 16px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* REVISION BOX */
+.revision-box{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.875rem}
+.revision-box .card-label{color:var(--amber-text)}
+
+/* COMMENT SENT INLINE CONFIRMATION */
+@keyframes fadeInOut{0%{opacity:0}15%{opacity:1}75%{opacity:1}100%{opacity:0}}
+.comment-sent-confirm{
+  font-size:12px;font-weight:500;
+  color:var(--green-text);opacity:0;
+  pointer-events:none;white-space:nowrap;
+  animation:none;
+}
+.comment-sent-confirm.show{animation:fadeInOut 2.4s ease forwards}
+
+/* COMMENTS */
+.comments-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.comment-bubble{background:var(--surface);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;color:var(--cream2);line-height:1.6;position:relative;padding-right:30px}
+.comment-meta{font-size:10px;color:var(--cream3);margin-top:4px}
+.comment-delete{position:absolute;top:7px;right:8px;background:none;border:none;color:var(--cream3);cursor:pointer;font-size:12px;padding:2px 4px;line-height:1}
+.comment-delete:hover{color:var(--red-text)}
+.comment-input-area{border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden}
+.comment-input-area.revision-mode{border-color:var(--amber-border)}
+.comment-input{width:100%;font-size:13px;padding:10px 14px;border:none;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--cream);resize:none;min-height:80px;display:block}
+.comment-input:focus{outline:none}
+.comment-input::placeholder{color:var(--cream3)}
+.comment-input-footer{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface2);border-top:1px solid var(--border)}
+.comment-count-hint{font-size:11px;color:var(--cream3)}
+.comment-count-hint strong{color:var(--amber-text)}
+.btn-send{padding:6px 16px;border-radius:var(--radius-xs);font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:opacity .15s}
+.btn-send:hover{opacity:.85}
+.btn-send-gold{background:var(--gold);color:var(--ink)}
+.btn-send-amber{background:var(--amber-text);color:var(--ink)}
+
+/* PHOTO */
+.photo-grid-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;align-items:start}
+.photo-thumb{position:relative;aspect-ratio:4/3;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border2)}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-remove{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.72);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
+.photo-remove:hover{background:var(--red-bg);color:var(--red-text)}
+.photo-add-tile{aspect-ratio:4/3;border-radius:var(--radius-sm);border:1.5px dashed var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s,background .2s;gap:4px}
+.photo-add-tile:hover{border-color:var(--gold);background:rgba(200,146,42,.06)}
+.photo-add-tile input{display:none}
+.photo-add-tile-icon{font-size:18px;color:var(--cream3);line-height:1}
+.photo-add-tile-text{font-size:10px;color:var(--cream3)}
+.photo-empty-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;display:flex;flex-direction:column;align-items:center;gap:5px}
+.photo-empty-zone:hover{border-color:var(--gold);background:rgba(200,146,42,.05)}
+.photo-empty-zone input{display:none}
+.photo-empty-icon{font-size:22px;color:var(--cream3);opacity:.5}
+.photo-empty-text{font-size:13px;color:var(--cream2);font-weight:500}
+.photo-empty-sub{font-size:11px;color:var(--cream3)}
+
+/* GROUPS */
+.groups-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.groups-col-label{font-size:10px;color:var(--cream3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:8px}
+.groups-col{display:flex;flex-direction:column;gap:8px}
+.gcard{border-radius:var(--radius-sm);padding:9px 11px;display:flex;align-items:stretch;min-height:52px;position:relative}
+.gcard-left{background:var(--surface);border:1px solid var(--border);flex-direction:column;gap:5px;cursor:default}
+.gcard-left.filled:hover{border-color:var(--gold);background:var(--surface2)}
+.gcard-name-row{display:flex;align-items:center;gap:6px}
+.gcard-name{font-size:12px;font-weight:600;color:var(--cream);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcard-edit-btn{background:none;border:none;color:var(--cream3);cursor:pointer;font-size:10px;padding:2px 4px;flex-shrink:0;line-height:1}
+.gcard-edit-btn:hover{color:var(--gold)}
+.gcard-sub{font-size:10px;color:var(--cream3)}
+.gcard-arrow{font-size:10px;color:var(--cream3)}
+.gcard-edit-form{display:flex;flex-direction:column;gap:5px;width:100%}
+.gcard-input{width:100%;font-size:11px;padding:5px 7px;border:1px solid var(--border2);border-radius:var(--radius-xs);background:var(--surface2);color:var(--cream);font-family:'DM Sans',sans-serif}
+.gcard-input:focus{outline:none;border-color:var(--gold)}
+.gcard-input::placeholder{color:var(--cream3);font-size:11px}
+.gcard-btn-row{display:flex;gap:5px}
+.gcard-save{background:var(--gold);color:var(--ink);border:none;border-radius:var(--radius-xs);padding:3px 9px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+.gcard-cancel{background:none;color:var(--cream3);border:1px solid var(--border2);border-radius:var(--radius-xs);padding:3px 9px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.gcard-empty-left{background:var(--surface);border:1.5px dashed var(--border2);flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}
+.gcard-empty-left:hover{border-color:var(--gold);background:rgba(200,146,42,.04)}
+.gcard-empty-text{font-size:11px;color:var(--cream3)}
+.gcard-right-empty{background:var(--surface);border:1.5px dashed var(--border2);flex-direction:column;gap:5px}
+.gcard-right-input-row{display:flex;align-items:center;gap:5px;width:100%}
+.gcard-right-input{flex:1;font-size:11px;padding:5px 7px;border:1px solid var(--border2);border-radius:var(--radius-xs);background:var(--surface2);color:var(--cream);font-family:'DM Sans',sans-serif;min-width:0}
+.gcard-right-input:focus{outline:none;border-color:var(--gold)}
+.gcard-right-input::placeholder{color:var(--cream3);font-size:11px}
+.gcard-add-btn{background:var(--gold);color:var(--ink);border:none;border-radius:var(--radius-xs);padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;flex-shrink:0}
+.gcard-add-btn:hover{background:var(--gold-dark);color:var(--cream)}
+.gcard-right-filled{background:var(--blue-bg);border:1px solid var(--blue-border);text-decoration:none;flex-direction:row;align-items:center;gap:8px;cursor:pointer}
+.gcard-right-filled:hover{border-color:var(--blue-text);background:#1a2a3a}
+.gcard-right-name{font-size:11px;font-weight:600;color:var(--blue-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.gcard-right-sub{font-size:10px;color:var(--blue-text);opacity:.7}
+.gcard-right-remove{background:none;border:none;color:var(--blue-text);opacity:.5;cursor:pointer;font-size:11px;padding:2px 3px;flex-shrink:0}
+.gcard-right-remove:hover{opacity:1;color:var(--red-text)}
+.gcard-fetching{font-size:11px;color:var(--cream3);font-style:italic}
+
+/* ENGAGEMENT TRACKER — clean input-field style, no emojis */
+.eng-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border)}
+.eng-item{background:var(--surface);padding:14px 10px 12px;text-align:center;position:relative}
+.eng-label-top{font-size:10px;color:var(--cream3);text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:8px}
+.eng-input{width:100%;background:transparent;border:none;font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--cream);text-align:center;padding:0;cursor:text;outline:none;-moz-appearance:textfield}
+.eng-input::-webkit-outer-spin-button,.eng-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.eng-input:focus{color:var(--gold)}
+.eng-save-row{margin-top:12px;display:none;justify-content:flex-end;gap:8px;align-items:center}
+.eng-save-row.show{display:flex}
+.eng-saved-msg{font-size:11px;color:var(--green-text);display:none}
+.eng-saved-msg.show{display:block}
+.eng-save-btn{background:var(--gold);color:var(--ink);border:none;border-radius:var(--radius-xs);padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+.eng-save-btn:hover{background:var(--gold-dark);color:var(--cream)}
+
+.divider{height:1px;background:var(--border);margin:1.5rem 0}
+
+/* ── SCROLLBAR STYLING — brand-consistent across all panels ── */
+.calendar-panel,
+.detail-panel,
+.fb-sidebar{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.calendar-panel::-webkit-scrollbar,
+.detail-panel::-webkit-scrollbar,
+.fb-sidebar::-webkit-scrollbar{width:4px}
+.calendar-panel::-webkit-scrollbar-track,
+.detail-panel::-webkit-scrollbar-track,
+.fb-sidebar::-webkit-scrollbar-track{background:transparent}
+.calendar-panel::-webkit-scrollbar-thumb,
+.detail-panel::-webkit-scrollbar-thumb,
+.fb-sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+.calendar-panel::-webkit-scrollbar-thumb:hover,
+.detail-panel::-webkit-scrollbar-thumb:hover,
+.fb-sidebar::-webkit-scrollbar-thumb:hover{background:var(--cream3)}
+
+/* ── FACEBOOK PREVIEW SIDEBAR ── */
+.fb-sidebar-label{font-size:10px;color:var(--cream3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.fb-sidebar-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.fb-preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:2rem 1rem;color:var(--cream3);text-align:center;min-height:200px}
+.fb-preview-empty-icon{font-size:32px;opacity:.2}
+.fb-preview-empty-text{font-size:12px;opacity:.6}
+
+/* FB card — authentic dark-mode Facebook look */
+.fb-card{background:#18191a;border-radius:10px;overflow:hidden;border:1px solid #3a3b3c;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+.fb-card-header{padding:12px 14px 8px;display:flex;align-items:flex-start;gap:10px;background:#242526}
+.fb-avatar-img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;display:block}
+.fb-avatar-fallback{width:40px;height:40px;border-radius:50%;background:#c8922a;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.fb-avatar-fallback img{width:100%;height:100%;object-fit:contain;border-radius:0}
+.fb-name-block{flex:1;min-width:0}
+.fb-name{font-size:13.5px;font-weight:700;color:#e4e6eb;line-height:1.3}
+.fb-name span{color:#e4e6eb}
+.fb-posted-in{font-size:12px;color:#b0b3b8;margin-top:1px}
+.fb-posted-in strong{color:#e4e6eb;font-weight:600}
+.fb-meta{font-size:11px;color:#b0b3b8;margin-top:3px;display:flex;align-items:center;gap:4px}
+.fb-dot{font-size:6px;opacity:.6}
+.fb-more-btn{margin-left:auto;color:#b0b3b8;font-size:22px;line-height:1;cursor:default;padding:0 4px;font-weight:700;letter-spacing:.05em}
+.fb-body{padding:10px 16px 12px;font-size:14px;color:#e4e6eb;line-height:1.6;word-break:break-word;background:#242526}
+.fb-see-more{color:#b0b3b8;font-size:13px;cursor:default}
+/* Image area */
+.fb-media{background:#3a3b3c}
+.fb-single-img{width:100%;display:block;max-height:400px;object-fit:contain;background:#242526}
+.fb-two-img{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.fb-two-img img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.fb-three-img{display:grid;grid-template-columns:2fr 1fr;gap:2px;height:280px}
+.fb-three-img .fb-img-main{height:100%;object-fit:cover;width:100%;display:block}
+.fb-three-img .fb-three-col{display:flex;flex-direction:column;gap:2px;height:100%}
+.fb-three-img .fb-three-col img{flex:1;width:100%;object-fit:cover;display:block;min-height:0}
+.fb-four-img{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.fb-four-img img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.fb-img-more-wrap{position:relative;display:block}
+.fb-img-more-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff}
+.fb-no-img{width:100%;aspect-ratio:16/9;background:#3a3b3c;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#606770;gap:6px}
+.fb-no-img-icon{font-size:26px;opacity:.35}
+.fb-no-img-text{font-size:11px}
+/* Reactions bar */
+.fb-reactions-bar{padding:8px 14px;display:flex;align-items:center;justify-content:space-between;background:#242526;border-top:1px solid #3a3b3c}
+.fb-react-left{display:flex;align-items:center;gap:5px;font-size:13px;color:#b0b3b8}
+.fb-react-bubbles{display:flex}
+.fb-react-bubble{width:18px;height:18px;border-radius:50%;border:2px solid #242526;margin-left:-5px;display:flex;align-items:center;justify-content:center;font-size:10px}
+.fb-react-bubble:first-child{margin-left:0}
+.fb-react-count{font-size:13px;color:#b0b3b8}
+.fb-stats-right{font-size:13px;color:#b0b3b8}
+/* Action bar */
+.fb-actions{display:flex;border-top:1px solid #3a3b3c;background:#242526}
+.fb-action{flex:1;padding:8px 4px;text-align:center;font-size:13px;color:#b0b3b8;cursor:default;display:flex;align-items:center;justify-content:center;gap:5px;font-weight:600}
+.fb-action:hover{background:#3a3b3c}
+.fb-action-icon{font-size:16px}
+
+/* MOBILE DRAWER */
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:150}
+
+/* PREVIEW TOGGLE — shown on screens where fb-sidebar is hidden */
+.preview-toggle{display:none;background:var(--gold);color:var(--ink);border:none;border-radius:var(--radius-sm);padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;gap:6px;align-items:center;white-space:nowrap;flex-shrink:0}
+.preview-toggle:hover{background:var(--gold-dark);color:var(--cream)}
+
+/* PREVIEW MODAL — slides up on mobile/tablet */
+.preview-modal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);align-items:flex-end;justify-content:center}
+.preview-modal.open{display:flex}
+.preview-modal-inner{background:var(--ink2);border-radius:16px 16px 0 0;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:1.5rem;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.preview-modal-inner::-webkit-scrollbar{width:4px}
+.preview-modal-inner::-webkit-scrollbar-track{background:transparent}
+.preview-modal-inner::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+.preview-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.preview-modal-title{font-size:13px;font-weight:600;color:var(--cream2)}
+.preview-modal-close{background:var(--surface2);border:none;color:var(--cream2);cursor:pointer;width:28px;height:28px;border-radius:50%;font-size:16px;display:flex;align-items:center;justify-content:center;line-height:1}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .fb-sidebar{display:none}
+  .preview-toggle{display:inline-flex}
+}
+@media(max-width:900px){
+  .main{height:auto;min-height:calc(100vh - 105px)}
+  .calendar-panel{position:fixed;left:0;top:0;bottom:0;z-index:160;width:270px;min-width:270px;transform:translateX(-100%);padding-top:76px;box-shadow:4px 0 32px rgba(0,0,0,.6)}
+  .calendar-panel.open{transform:translateX(0)}
+  .drawer-overlay.open{display:block}
+  .detail-panel{padding:1.1rem 1rem}
+  .hamburger{display:flex;align-items:center;justify-content:center}
+  .legend{display:none}
+  .progress-bar{width:70px}
+  .progress-label-text{display:none}
+  .post-detail{max-width:100%}
+  .groups-two-col{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .header{padding:0 1rem}
+  .detail-panel{padding:.875rem .75rem}
+  .card{padding:.875rem 1rem}
+  .action-bar .btn{padding:8px 12px;font-size:12px}
+  .photo-grid-wrap{grid-template-columns:repeat(2,1fr)}
+  .detail-date{font-size:22px}
+  .groups-two-col{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-wrap">
+    <img class="logo-img"
+      src="https://framerusercontent.com/images/zXE44UtZ7iH5YKvvj13MNl2M.png?width=577&height=434"
+      alt="The Alley Cedar Park"
+      onerror="this.style.display='none';document.getElementById('logoFallback').style.display='flex'">
+    <div id="logoFallback" style="display:none;align-items:center">
+      <svg width="108" height="36" viewBox="0 0 108 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0,3)"><rect x="3" y="8" width="22" height="16" rx="3" fill="#c8922a" opacity=".15" stroke="#c8922a" stroke-width="1.5"/><path d="M25 14 Q30 14 30 18 Q30 22 25 22" stroke="#c8922a" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M7 8 Q9 3 14 3" stroke="#c8922a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".7"/><line x1="3" y1="26" x2="25" y2="26" stroke="#c8922a" stroke-width="1.5" stroke-linecap="round"/></g>
+        <text x="36" y="16" font-family="'Playfair Display',Georgia,serif" font-size="13" font-weight="700" fill="#f5edde" letter-spacing="1">THE ALLEY</text>
+        <text x="36" y="29" font-family="'DM Sans',sans-serif" font-size="9" fill="#c9b99a" letter-spacing="2.5">CEDAR PARK</text>
+      </svg>
+    </div>
+    <div class="logo-divider"></div>
+    <div class="logo-sub-block">
+      <span class="logo-sub">Content Calendar</span>
+      <span class="logo-sub-month">April 2026</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-wrap">
+      <span id="progressLabel" class="progress-label-text">0 / 20 approved</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <button class="preview-toggle" id="previewToggleBtn" style="display:none">&#128065; Preview</button>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open calendar">&#9776;</button>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#8a7660"></div>Pending</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#6fcc96"></div>Approved</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f0837a"></div>Declined</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e8b96a"></div>Needs revision</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7ab0e8"></div>Posted</div>
+</div>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<!-- PREVIEW MODAL for tablet/mobile -->
+<div class="preview-modal" id="previewModal">
+  <div class="preview-modal-inner">
+    <div class="preview-modal-header">
+      <span class="preview-modal-title">Facebook Preview</span>
+      <button class="preview-modal-close" onclick="closePreviewModal()">&#x2715;</button>
+    </div>
+    <div id="fbPreviewAreaModal"></div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- LEFT: Calendar -->
+  <div class="calendar-panel" id="calendarPanel">
+    <div class="cal-month">April</div>
+    <div class="cal-year">2026 &mdash; 20 posts</div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="stats-bar" id="statsBar"></div>
+  </div>
+
+  <!-- CENTER: Post detail -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-tea">🧋</div>
+      <p>Select a date to review the post</p>
+      <small>Tap any highlighted date in the calendar</small>
+    </div>
+    <div class="post-detail" id="postDetail" style="display:none"></div>
+  </div>
+
+  <!-- RIGHT: Facebook preview -->
+  <div class="fb-sidebar" id="fbSidebar">
+    <div class="fb-sidebar-label">Facebook Preview</div>
+    <div id="fbPreviewArea">
+      <div class="fb-preview-empty">
+        <div class="fb-preview-empty-icon">👁</div>
+        <div class="fb-preview-empty-text">Select a post to see the Facebook preview</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const POSTS=[
+  {date:"Apr 2",day:"Thursday",type:"question",typeLabel:"Question",topic:"Brown Sugar Deerioca Creme Brulee — which milk combo is best?",caption:`Cedar Park boba people, I need your help settling something.\n\nI've been getting the Brown Sugar Deerioca Creme Brulee Milk at The Alley on Whitestone basically every week. But I keep going back and forth on which milk to order it with.\n\nOat milk hits different but the regular is more classic.\n\nWhat do you guys do? Is there a combo I'm sleeping on?`},
+  {date:"Apr 3",day:"Friday",type:"story",typeLabel:"Story",topic:"Friday wind-down boba run ritual",caption:`Every Friday my coworker and I have a rule: no talking about work once we leave the building.\n\nToday we ended up at The Alley in Cedar Park and both got the Ube Taro Brown Sugar Deerioca Milk. Sat outside for like 45 minutes just vibing.\n\nI don't think people realize there are caffeine-free options there. My coworker is super sensitive to caffeine and she goes every week now. Ube taro with no caffeine is actually unreal.\n\nAnyway. TGIF. Hope everyone's treating themselves this weekend.`},
+  {date:"Apr 6",day:"Monday",type:"controversy",typeLabel:"Hot take",topic:"Croffle > regular waffles, fight me",caption:`Hot take and I will not be taking questions.\n\nCroffles are better than waffles.\n\nThe Alley Cedar Park has a Cocoa Creme Brulee Croffle and it is the most criminally underrated thing on their menu. Crispy on the outside, soft on the inside, that caramelized sugar crust on top is ridiculous.\n\nPeople are in there ordering drinks and walking right past this thing. Stop sleeping.\n\nAm I wrong? Has anyone else tried it?`},
+  {date:"Apr 7",day:"Tuesday",type:"question",typeLabel:"Question",topic:"Best drink to get when you need to focus (WFH crowd)",caption:`Work from home people of Cedar Park, I have a genuine question.\n\nI've been using The Alley on Whitestone as my unofficial office annex. Great wifi energy, low key spot.\n\nBut I can never decide between getting a tea with caffeine or just going caffeine-free and enjoying the vibe without the jitters.\n\nWhat do you order when you need to actually sit down and focus? Looking for recs from people who actually go there regularly.`},
+  {date:"Apr 8",day:"Wednesday",type:"hack",typeLabel:"Order hack",topic:"The custom sweetness level is a game changer",caption:`Nobody told me you could customize the sweetness level at The Alley and I'm a little annoyed about it.\n\nI always assumed boba just came one way. Got a tip from someone in line last week to ask for 50% sugar on the Brown Sugar Milk Tea.\n\nIt's completely different. You actually taste the tea instead of just sugar. It's smoother.\n\nIf you've been getting 100% and wondering why it feels heavy, try dropping to 50 or 75. You can thank me later.`},
+  {date:"Apr 9",day:"Thursday",type:"poll",typeLabel:"Poll",topic:"Team milk tea vs team fruit tea — the eternal debate",caption:`Okay Cedar Park, I need actual data on this.\n\nAre you a milk tea person or a fruit tea person?\n\nI've been a milk tea loyalist for years. My sister thinks fruit teas are superior. We have been arguing about this for three months.\n\nDrop your vote below. I will be showing her this thread.`},
+  {date:"Apr 10",day:"Friday",type:"review",typeLabel:"Review",topic:"First time bringing my mom — her reaction was priceless",caption:`Took my mom to The Alley in Cedar Park for the first time last weekend.\n\nShe's never had real boba before. Like she had tried it once from a grocery store and thought she didn't like it.\n\nGot her the Assam Black Milk Tea with 50% sugar and a little boba. She was quiet for a second and then goes "why have I been getting coffee this whole time."\n\nShe asked me to write down the address. She is 62 years old and is now a boba convert.\n\nThat's the post. That's all I have. Open daily 9 to 10 PM if you want to corrupt your parents too.`},
+  {date:"Apr 13",day:"Monday",type:"controversy",typeLabel:"Hot take",topic:"The Alley is the reason Cedar Park is actually cool now",caption:`Genuine opinion: Cedar Park has gotten way more interesting in the last couple years and places like The Alley on Whitestone are a big reason why.\n\nI moved here from Austin proper and I'll be honest I was not expecting much. But the craft drink scene out here is genuinely solid.\n\nIf you haven't been to The Alley yet and you're comparing it to whatever boba chain you've tried before, please just go once. The house-made brown sugar boba specifically is on a different level.\n\nAnyone else feel like this side of town has stepped up?`},
+  {date:"Apr 14",day:"Tuesday",type:"hack",typeLabel:"Order hack",topic:"The anime drops sell out — here's how to not miss them",caption:`PSA for Cedar Park boba fans.\n\nThe Alley does limited anime-inspired drops and they genuinely sell out. My friend missed the last two because she didn't know when they were coming.\n\nFollow @thealleycedarpark on Instagram. They announce them before they drop and once they're gone they're gone. Not an exaggeration.\n\nPicked up the most recent one last week and it was worth every penny. Presentation was actually insane.\n\nJust trying to save people from the sadness of showing up and missing it.`},
+  {date:"Apr 15",day:"Wednesday",type:"story",typeLabel:"Story",topic:"Boba run turned into a two hour hangout",caption:`Went to grab a quick drink at The Alley on Whitestone on my lunch break.\n\nRan into two people I hadn't seen since high school.\n\nWe sat there for two hours. I was an hour late getting back. Completely worth it.\n\nThere's something about that spot. You go in for a 10 minute order and you end up staying. Good drinks, chill energy.\n\nMy boss did not agree it was worth it. But she also has not tried the Brown Sugar Creme Brulee Milk, so her opinion is invalid.`},
+  {date:"Apr 16",day:"Thursday",type:"question",typeLabel:"Question",topic:"What do you order for someone who says they don't like boba?",caption:`Genuine challenge: my husband swears he doesn't like boba.\n\nHe's tried it exactly one time from a place that shall not be named and has written off the entire category.\n\nI'm taking him to The Alley in Cedar Park this weekend and I want to order him something that might actually change his mind.\n\nHe doesn't love super sweet stuff. Not a huge texture person. Thinks he's a black coffee guy but secretly drinks vanilla lattes.\n\nWhat would you order him? I feel like the Assam Black Milk Tea might be the move but I want other opinions.`},
+  {date:"Apr 17",day:"Friday",type:"anime",typeLabel:"Anime drop",topic:"The anime drop culture at The Alley — for people who don't know",caption:`For people who don't follow the Cedar Park food scene closely, let me explain the anime drop thing at The Alley because it's actually really cool.\n\nThey do limited-run drinks tied to anime themes. Collectible cups, unique flavors, small batches. Once it's gone it's gone. They announce on Instagram before they drop.\n\nI'm not even a huge anime person but I've been grabbing them because the drinks are genuinely good and the cups are actually kind of art at this point.\n\nIf you've been sleeping on this, follow @thealleycedarpark before the next one drops. Don't say nobody warned you.`},
+  {date:"Apr 20",day:"Monday",type:"poll",typeLabel:"Poll",topic:"Hot vs iced — the spring edition debate",caption:`Spring in Cedar Park and I cannot decide if I should still be ordering hot drinks.\n\nIt's warming up but mornings are still chilly. My brain says iced. My soul says hot.\n\nThe Alley does both and I respect that about them. Yesterday I got hot Assam milk tea. Today I'm thinking iced lychee lemon sparkling.\n\nWhat are you all doing as the weather changes? Still ordering hot or have you fully switched to iced?`},
+  {date:"Apr 21",day:"Tuesday",type:"review",typeLabel:"Review",topic:"DoorDash order from Leander — was it worth the delivery?",caption:`So I live closer to Leander and I've been seeing people talk about The Alley Cedar Park for months.\n\nFinally caved and just ordered delivery.\n\nBrown Sugar Deerioca Creme Brulee Milk.\n\nI will say I was skeptical that boba would survive a delivery ride. It did. The boba held up, the drink was still cold, the cream was still doing its thing on top.\n\nWorth the delivery fee. I get why people drive out for this.\n\nAnyone else been doing deliveries from there? What holds up best on the ride?`},
+  {date:"Apr 22",day:"Wednesday",type:"hack",typeLabel:"Order hack",topic:"Customizing your ice level actually matters more than you think",caption:`Another thing I wish someone had told me earlier about The Alley.\n\nYou can ask for no ice. This sounds obvious but it changes the experience completely for milk-based drinks.\n\nIf you're sensitive to cold or you want a more full-bodied sip, no ice on the Brown Sugar Milk means you get more drink and the flavor is more concentrated.\n\nI've been doing this for a month. My usual order hits way different now.\n\nLittle details like this are why customizable menus exist. Use them.`},
+  {date:"Apr 23",day:"Thursday",type:"story",typeLabel:"Story",topic:"Taking the kids — actually a great family spot",caption:`Needed a Thursday afternoon activity for the kids and ended up at The Alley on Whitestone.\n\nZero caffeine options for them and they were genuinely excited about the boba pearls. My 7-year-old called them "the chewy things" and asked for more.\n\nMy daughter got something with the brown sugar drizzle on the cup and refused to drink it until I took a photo. She's 9. I have raised her well.\n\nIt's a solid family stop. Nice spot, the staff is friendly, and I didn't spend a hundred dollars which I cannot say about most places I take these kids.\n\nCedar Park parents, take notes.`},
+  {date:"Apr 24",day:"Friday",type:"controversy",typeLabel:"Hot take",topic:"Lychee Lemon Sparkling Tea is the most slept-on thing on the menu",caption:`I don't understand why people walk into The Alley and immediately go for the heavy milk teas when the Lychee Lemon Sparkling Tea exists.\n\nIt's light. It's refreshing. It tastes like spring. It makes zero sense to drink something heavy and sweet when it's 80 degrees outside.\n\nNot saying milk teas are bad. I order them too. I'm just saying the sparkling option has been criminally overlooked in every conversation I've seen about this place.\n\nWho's actually been getting the sparkling teas? You are my people.`},
+  {date:"Apr 27",day:"Monday",type:"question",typeLabel:"Question",topic:"Birthday run to The Alley — what should I get?",caption:`It's my birthday this week and I've decided my treat is going to The Alley on Whitestone and ordering something I've never tried before.\n\nI'm a creature of habit. I always get the Brown Sugar Milk Tea. Every single time. I don't deviate.\n\nBut this week I want to try something new. Looking for genuine recommendations from people who have explored the menu more than I have.\n\nWhat's the most interesting thing you've ordered there? I'm open to anything.`},
+  {date:"Apr 28",day:"Tuesday",type:"review",typeLabel:"Review",topic:"Went every day last week — here's what I learned",caption:`I went to The Alley Cedar Park five days in a row last week. Not on purpose, it just kind of happened.\n\nMonday: Brown Sugar Deerioca Milk Tea. Classic. Never fails.\nTuesday: Ube Taro. First time. Absolutely caught off guard by how good it was.\nWednesday: Assam Black Milk Tea with 75% sugar. Clean and simple.\nThursday: Lychee Lemon Sparkling. Refreshing and lighter than I expected.\nFriday: Creme Brulee Milk with extra boba. Treated myself.\n\nFavorite of the week: the Ube Taro. I slept on it for too long.\n\nWhat's your rotation look like?`},
+  {date:"Apr 29",day:"Wednesday",type:"story",typeLabel:"Story",topic:"End of April, reflecting on my boba habit",caption:`Okay so I started April telling myself I'd cut back on specialty drinks to save money.\n\nIt is April 29th. I have been to The Alley Cedar Park seven times this month. That is not cutting back.\n\nIn my defense the Brown Sugar Deerioca Creme Brulee Milk is genuinely one of the best things I've found in this area. And they're open until 10 PM which is dangerous information to have.\n\nNo regrets. Budget can reset in May.\n\nAnyone else have a place where the "I'll just go once this month" plan always falls apart?`},
+];
+
+const POST_DAYS=[2,3,6,7,8,9,10,13,14,15,16,17,20,21,22,23,24,27,28,29];
+const POST_MAP={};POSTS.forEach((p,i)=>{POST_MAP[POST_DAYS[i]]=i;});
+
+let state={};
+try{state=JSON.parse(localStorage.getItem('alley_cp_apr2026')||'{}');}catch(e){}
+const save=()=>{try{localStorage.setItem('alley_cp_apr2026',JSON.stringify(state));}catch(e){}};
+
+function getPS(idx){
+  if(!state[idx])state[idx]={status:'pending',comments:[],photos:[],engagement:{likes:0,comments:0,shares:0},
+    groups:[{name:'',url:'',postUrl:'',postName:''},{name:'',url:'',postUrl:'',postName:''},{name:'',url:'',postUrl:'',postName:''},{name:'',url:'',postUrl:'',postName:''}]};
+  if(!state[idx].groups)state[idx].groups=[{name:'',url:'',postUrl:'',postName:''},{name:'',url:'',postUrl:'',postName:''},{name:'',url:'',postUrl:'',postName:''},{name:'',url:'',postUrl:'',postName:''}];
+  if(!state[idx].engagement)state[idx].engagement={likes:0,comments:0,shares:0};
+  return state[idx];
+}
+
+let activeIdx=null;
+
+/* HAMBURGER */
+document.getElementById('hamburgerBtn').addEventListener('click',()=>{
+  document.getElementById('calendarPanel').classList.toggle('open');
+  document.getElementById('drawerOverlay').classList.toggle('open');
+});
+document.getElementById('drawerOverlay').addEventListener('click',closeDrawer);
+function closeDrawer(){document.getElementById('calendarPanel').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('open');}
+
+/* PREVIEW MODAL */
+function openPreviewModal(){
+  if(activeIdx===null)return;
+  const modal=document.getElementById('previewModal');
+  modal.classList.add('open');
+  // render preview into modal
+  renderFbPreviewInto('fbPreviewAreaModal',activeIdx);
+}
+function closePreviewModal(){document.getElementById('previewModal').classList.remove('open');}
+// close modal on backdrop click
+document.getElementById('previewModal').addEventListener('click',function(e){if(e.target===this)closePreviewModal();});
+document.getElementById('previewToggleBtn').addEventListener('click',()=>{
+  if(activeIdx!==null)openPreviewModal();
+});
+
+/* CALENDAR */
+function buildCalendar(){
+  const grid=document.getElementById('calGrid');
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>{const el=document.createElement('div');el.className='cal-day-label';el.textContent=d;grid.appendChild(el);});
+  for(let i=0;i<3;i++){const el=document.createElement('div');el.className='cal-cell';grid.appendChild(el);}
+  for(let d=1;d<=30;d++){
+    const el=document.createElement('div');
+    const has=POST_MAP[d]!==undefined;const idx=POST_MAP[d];const ps=has?getPS(idx):null;
+    el.className=`cal-cell${has?' has-post':''}${ps?' status-'+ps.status:''}`;
+    el.innerHTML=`<span>${d}</span>${has?'<div class="cal-status-dot"></div>':''}`;
+    if(has){el.dataset.idx=idx;el.addEventListener('click',()=>{activeIdx=idx;document.querySelectorAll('.cal-cell').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderDetail(idx);closeDrawer();});}
+    grid.appendChild(el);
+  }
+}
+function refreshCal(){document.querySelectorAll('.cal-cell.has-post').forEach(el=>{const idx=parseInt(el.dataset.idx);const ps=getPS(idx);el.className=`cal-cell has-post status-${ps.status}${activeIdx===idx?' active':''}`;});}
+function updateStats(){
+  const c={pending:0,approved:0,declined:0,revision:0,posted:0};
+  POSTS.forEach((_,i)=>{const s=getPS(i).status;c[s]=(c[s]||0)+1;});
+  const approved=c.approved+c.posted;
+  document.getElementById('progressLabel').textContent=`${approved} / 20 approved`;
+  document.getElementById('progressFill').style.width=`${(approved/20)*100}%`;
+  document.getElementById('statsBar').innerHTML=`
+    <div class="stat-box s-pending"><div class="stat-num">${c.pending}</div><div class="stat-label">Pending</div></div>
+    <div class="stat-box s-approved"><div class="stat-num">${c.approved+c.posted}</div><div class="stat-label">Approved</div></div>
+    <div class="stat-box s-declined"><div class="stat-num">${c.declined+(c.revision||0)}</div><div class="stat-label">Needs work</div></div>
+    <div class="stat-box s-posted"><div class="stat-num">${c.posted}</div><div class="stat-label">Posted</div></div>`;
+}
+function statusLabel(s){return{pending:'Pending review',approved:'Approved',declined:'Declined',revision:'Needs revision',posted:'Posted'}[s]||s;}
+
+/* FB PREVIEW */
+function renderFbPreview(idx){
+  renderFbPreviewInto('fbPreviewArea',idx);
+  // also update modal if open
+  const modal=document.getElementById('previewModal');
+  if(modal.classList.contains('open'))renderFbPreviewInto('fbPreviewAreaModal',idx);
+}
+function renderFbPreviewInto(containerId,idx){
+  const post=POSTS[idx];const ps=getPS(idx);
+  const eng=ps.engagement||{likes:0,comments:0,shares:0};
+  const preview=document.getElementById(containerId);
+  if(!preview)return;
+
+  // Caption: use edited version if present
+  const activeCap=(state['cv_'+idx]!==undefined?state['cv_'+idx]:post.caption);
+  // Caption: show first 3 lines / ~220 chars then See more
+  const lines=activeCap.split('\n').filter(l=>l.trim());
+  const previewLines=lines.slice(0,3).join('\n');
+  const hasMore=lines.length>3||activeCap.length>220;
+  const capHtml=escHtml(previewLines).replace(/\n/g,'<br>')+(hasMore?` <span class="fb-see-more">See more</span>`:'');
+
+  // Photo grid
+  const photos=ps.photos||[];
+  let mediaHtml='';
+  if(photos.length===0){
+    mediaHtml=`<div class="fb-no-img"><div class="fb-no-img-icon">🖼</div><div class="fb-no-img-text">Photo appears here once uploaded</div></div>`;
+  } else if(photos.length===1){
+    mediaHtml=`<div class="fb-media"><img class="fb-single-img" src="${photos[0]}" alt="Photo"></div>`;
+  } else if(photos.length===2){
+    mediaHtml=`<div class="fb-media fb-two-img"><img src="${photos[0]}" alt="Photo 1"><img src="${photos[1]}" alt="Photo 2"></div>`;
+  } else if(photos.length===3){
+    mediaHtml=`<div class="fb-media fb-three-img"><img class="fb-img-main" src="${photos[0]}" alt="Photo 1"><div class="fb-three-col"><img src="${photos[1]}" alt="Photo 2"><img src="${photos[2]}" alt="Photo 3"></div></div>`;
+  } else {
+    // 4+ photos: show 4-grid, last cell shows +N overlay
+    const extra=photos.length-4;
+    const lastCell=extra>0
+      ?`<div class="fb-img-more-wrap"><img src="${photos[3]}" alt="Photo 4" style="width:100%;aspect-ratio:1;object-fit:cover;display:block"><div class="fb-img-more-overlay">+${extra}</div></div>`
+      :`<img src="${photos[3]}" alt="Photo 4" style="width:100%;aspect-ratio:1;object-fit:cover;display:block">`;
+    mediaHtml=`<div class="fb-media fb-four-img"><img src="${photos[0]}" alt="Photo 1"><img src="${photos[1]}" alt="Photo 2"><img src="${photos[2]}" alt="Photo 3">${lastCell}</div>`;
+  }
+
+  // Reactions
+  const likes=eng.likes||0;
+  const reactBubbles=likes>0
+    ?`<div class="fb-react-bubbles"><div class="fb-react-bubble" style="background:#1877f2">👍</div><div class="fb-react-bubble" style="background:#f33e58">❤️</div></div><span class="fb-react-count">${likes.toLocaleString()}</span>`
+    :`<span style="font-size:12px;opacity:.4">Be the first to react</span>`;
+  const rightStats=[eng.comments?`${eng.comments} comment${eng.comments!==1?'s':''}`:''  ,eng.shares?`${eng.shares} share${eng.shares!==1?'s':''}`:''  ].filter(Boolean).join(' · ');
+
+  // Group name — use first filled left group or fallback
+  const firstGroup=ps.groups&&ps.groups.find(g=>g.name);
+  const groupName=firstGroup?firstGroup.name:'Cedar Park Community';
+
+  // Logo URL for avatar
+  const logoSrc='https://framerusercontent.com/images/zXE44UtZ7iH5YKvvj13MNl2M.png?width=577&height=434';
+
+  preview.innerHTML=`
+    <div class="fb-card">
+      <div class="fb-card-header">
+        <div class="fb-avatar-fallback">
+          <img src="${logoSrc}" alt="The Alley" onerror="this.parentElement.style.background='#c8922a';this.remove()">
+        </div>
+        <div class="fb-name-block">
+          <div class="fb-name">The Alley Cedar Park</div>
+          <div class="fb-posted-in">posted in <strong>${escHtml(groupName)}</strong></div>
+          <div class="fb-meta">
+            <span>${post.date} · 2026</span>
+            <span class="fb-dot">·</span>
+            <span title="Public">🌐</span>
+          </div>
+        </div>
+        <div class="fb-more-btn">···</div>
+      </div>
+      <div class="fb-body">${capHtml}</div>
+      ${mediaHtml}
+      <div class="fb-reactions-bar">
+        <div class="fb-react-left">${reactBubbles}</div>
+        <div class="fb-stats-right">${rightStats}</div>
+      </div>
+      <div class="fb-actions">
+        <div class="fb-action"><span class="fb-action-icon">👍</span> Like</div>
+        <div class="fb-action"><span class="fb-action-icon">💬</span> Comment</div>
+        <div class="fb-action"><span class="fb-action-icon">↗</span> Share</div>
+      </div>
+    </div>`;
+}
+
+/* RENDER DETAIL */
+function renderDetail(idx){
+  const post=POSTS[idx];const ps=getPS(idx);
+  document.getElementById('emptyState').style.display='none';
+  // show preview toggle on narrow screens
+  const ptBtn=document.getElementById('previewToggleBtn');
+  if(ptBtn)ptBtn.style.display='';
+  const detail=document.getElementById('postDetail');detail.style.display='block';
+
+  /* Photos */
+  const hasPhotos=ps.photos&&ps.photos.length>0;
+  let photoHtml='';
+  if(hasPhotos){
+    const thumbs=ps.photos.map((p,pi)=>`<div class="photo-thumb"><img src="${p}" alt="Photo ${pi+1}"><button class="photo-remove" onclick="removePhoto(${idx},${pi})">&#x2715;</button></div>`).join('');
+    const addTile=`<label class="photo-add-tile" for="photoInput_${idx}" title="Add photo"><input type="file" id="photoInput_${idx}" accept="image/*" multiple onchange="handlePhotoUpload(${idx},this)"><div class="photo-add-tile-icon">+</div><div class="photo-add-tile-text">Add</div></label>`;
+    photoHtml=`<div class="photo-grid-wrap">${thumbs}${addTile}</div>`;
+  } else {
+    photoHtml=`<label class="photo-empty-zone" for="photoInput_${idx}"><input type="file" id="photoInput_${idx}" accept="image/*" multiple onchange="handlePhotoUpload(${idx},this)"><div class="photo-empty-icon">+</div><div class="photo-empty-text">Upload photo or creative asset</div><div class="photo-empty-sub">PNG, JPG, GIF — visible to client once added</div></label>`;
+  }
+
+  /* Groups */
+  let leftCards='',rightCards='';
+  for(let gi=0;gi<4;gi++){
+    const g=ps.groups[gi]||{name:'',url:'',postUrl:'',postName:''};
+    const editingLeft=state[`el_${idx}_${gi}`];
+    if(editingLeft){
+      leftCards+=`<div class="gcard gcard-left" style="min-height:100px"><div class="gcard-edit-form"><input class="gcard-input" id="gname_${idx}_${gi}" placeholder="Group name..." value="${escAttr(g.name)}"><input class="gcard-input" id="gurl_${idx}_${gi}" placeholder="Group URL (optional)..." value="${escAttr(g.url)}"><div class="gcard-btn-row"><button class="gcard-save" onclick="saveLeftCard(${idx},${gi})">Save</button><button class="gcard-cancel" onclick="cancelLeftEdit(${idx},${gi})">Cancel</button></div></div></div>`;
+    } else if(g.name){
+      const inner=g.url?`<a href="${g.url}" target="_blank" rel="noopener" style="display:contents;text-decoration:none" onclick="event.stopPropagation()"><div class="gcard-name-row"><span class="gcard-name">${escHtml(g.name)}</span><span class="gcard-arrow">&#8599;</span></div><div class="gcard-sub">Facebook Group</div></a>`:`<div class="gcard-name-row"><span class="gcard-name">${escHtml(g.name)}</span></div><div class="gcard-sub">Facebook Group</div>`;
+      leftCards+=`<div class="gcard gcard-left filled" onclick="startLeftEdit(${idx},${gi})">${inner}<button class="gcard-edit-btn" onclick="event.stopPropagation();startLeftEdit(${idx},${gi})">&#9998;</button></div>`;
+    } else {
+      leftCards+=`<div class="gcard gcard-empty-left" onclick="startLeftEdit(${idx},${gi})"><div class="gcard-empty-text">+ Add group</div></div>`;
+    }
+    if(g.postUrl&&g.postName){
+      rightCards+=`<a class="gcard gcard-right-filled" href="${g.postUrl}" target="_blank" rel="noopener"><div style="flex:1;min-width:0"><div class="gcard-right-name">${escHtml(g.postName)}</div><div class="gcard-right-sub">View live post &#8599;</div></div><button class="gcard-right-remove" onclick="event.preventDefault();clearPostLink(${idx},${gi})">&#x2715;</button></a>`;
+    } else if(g.postUrl&&!g.postName){
+      rightCards+=`<div class="gcard gcard-right-empty" style="min-height:52px"><span class="gcard-fetching">Fetching...</span></div>`;
+    } else {
+      rightCards+=`<div class="gcard gcard-right-empty"><div class="gcard-right-input-row"><input class="gcard-right-input" id="plink_${idx}_${gi}" type="url" placeholder="Paste post URL..."><button class="gcard-add-btn" onclick="handlePostLink(${idx},${gi})">Add</button></div></div>`;
+    }
+  }
+
+  /* Comments section */
+  const isRevision=ps.status==='revision';
+  const commentCount=ps.comments.length;
+  const commentsHtml=commentCount
+    ?ps.comments.map((c,ci)=>`<div class="comment-bubble">${escHtml(c.text)}<div class="comment-meta">${c.time}</div><button class="comment-delete" onclick="deleteComment(${idx},${ci})">&#x2715;</button></div>`).join('')
+    :`<div style="font-size:12px;color:var(--cream3);padding:4px 0">No comments yet.</div>`;
+
+  const inputHint=commentCount>0?`<span class="comment-count-hint"><strong>${commentCount}</strong> comment${commentCount>1?'s':''} added &mdash; add more below</span>`:`<span class="comment-count-hint">${isRevision?'Describe what needs to change...':''}</span>`;
+  const sendBtnClass=isRevision?'btn-send-amber':'btn-send-gold';
+  const inputPlaceholder=isRevision?(commentCount>0?'Add another revision note...':'Describe what needs to change...'):'Add a comment...';
+  const inputBorderClass=isRevision?'revision-mode':'';
+
+  /* Engagement */
+  const eng=ps.engagement||{likes:0,comments:0,shares:0};
+  const engHtml=`
+    <div class="eng-row">
+      <div class="eng-item">
+        <div class="eng-label-top">Reactions</div>
+        <input class="eng-input" id="engLikes_${idx}" type="number" min="0" value="${eng.likes||0}" oninput="onEngInput(${idx})">
+      </div>
+      <div class="eng-item">
+        <div class="eng-label-top">Comments</div>
+        <input class="eng-input" id="engComments_${idx}" type="number" min="0" value="${eng.comments||0}" oninput="onEngInput(${idx})">
+      </div>
+      <div class="eng-item">
+        <div class="eng-label-top">Shares</div>
+        <input class="eng-input" id="engShares_${idx}" type="number" min="0" value="${eng.shares||0}" oninput="onEngInput(${idx})">
+      </div>
+    </div>
+    <div class="eng-save-row" id="engSaveRow_${idx}">
+      <span class="eng-saved-msg" id="engSavedMsg_${idx}">Saved</span>
+      <button class="eng-save-btn" onclick="saveEngagement(${idx})">Save</button>
+    </div>`;
+
+  detail.innerHTML=`
+    <div class="detail-top">
+      <div><div class="detail-date">${post.date}</div><div class="detail-day">${post.day}</div></div>
+      <span class="status-badge badge-${ps.status}">${statusLabel(ps.status)}</span>
+    </div>
+    <span class="type-chip chip-${post.type}">${post.typeLabel}</span>
+    <div class="detail-topic">${post.topic}</div>
+    <div class="action-bar">
+      <button class="btn btn-approve${ps.status==='approved'?' active':''}" onclick="setStatus(${idx},'approved')">&#10003; Approve</button>
+      <button class="btn btn-decline${ps.status==='declined'?' active':''}" onclick="setStatus(${idx},'declined')">&#x2715; Decline</button>
+      <button class="btn btn-revision${ps.status==='revision'?' active':''}" onclick="setStatus(${idx},'revision')">&#9998; Needs revision</button>
+    </div>
+    <div class="card">
+      <div class="caption-label-row">
+        <div class="card-label">Caption</div>
+        <button class="caption-edit-btn" onclick="startCaptionEdit(${idx})">&#9998; Edit</button>
+      </div>
+      ${state['ce_'+idx]
+        ? `<textarea class="caption-textarea" id="captionTA_${idx}">${escAttr((state['cv_'+idx]!==undefined?state['cv_'+idx]:post.caption))}</textarea>
+           <div class="caption-edit-actions">
+             <button class="caption-cancel-btn" onclick="cancelCaptionEdit(${idx})">Cancel</button>
+             <button class="caption-save-btn" onclick="saveCaptionEdit(${idx})">Save caption</button>
+           </div>`
+        : `<div class="caption-text">${(state['cv_'+idx]!==undefined?state['cv_'+idx]:post.caption).replace(/\n/g,'<br>')}</div>`
+      }
+    </div>
+    <div class="card">
+      <div class="card-label">Photo / Creative</div>
+      ${photoHtml}
+    </div>
+    <div class="card">
+      <div class="groups-two-col">
+        <div><div class="groups-col-label">Will be posted to</div><div class="groups-col">${leftCards}</div></div>
+        <div><div class="groups-col-label">Live post links</div><div class="groups-col">${rightCards}</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Engagement</div>
+      ${engHtml}
+    </div>
+    <div class="divider"></div>
+    <div class="card">
+      <div class="card-label">${isRevision?'Revision notes &amp; comments':'Comments &amp; feedback'}</div>
+      <div class="comments-list" id="commentsList_${idx}">${commentsHtml}</div>
+      <div class="comment-input-area ${inputBorderClass}">
+        <textarea class="comment-input" id="commentInput_${idx}" placeholder="${inputPlaceholder}" rows="3"></textarea>
+        <div class="comment-input-footer">
+          ${inputHint}
+          <div style="display:flex;align-items:center;gap:10px;margin-left:auto">
+            <span class="comment-sent-confirm" id="sentConfirm_${idx}">&#10003; Added</span>
+            <button class="btn-send ${sendBtnClass}" onclick="addComment(${idx})">${isRevision?'Submit revision':'Send'}</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  // Equalise group card heights
+  requestAnimationFrame(()=>{
+    const cols=document.querySelectorAll('.groups-col');
+    if(cols.length>=2){
+      const lefts=Array.from(cols[0].children);
+      const rights=Array.from(cols[1].children);
+      [...lefts,...rights].forEach(el=>el.style.minHeight='');
+      const len=Math.min(lefts.length,rights.length);
+      for(let i=0;i<len;i++){
+        const h=Math.max(lefts[i].offsetHeight,rights[i].offsetHeight);
+        lefts[i].style.minHeight=h+'px';rights[i].style.minHeight=h+'px';
+      }
+    }
+  });
+
+  renderFbPreview(idx);
+}
+
+/* ENGAGEMENT */
+function onEngInput(idx){
+  const row=document.getElementById(`engSaveRow_${idx}`);
+  if(row)row.classList.add('show');
+  const msg=document.getElementById(`engSavedMsg_${idx}`);
+  if(msg)msg.classList.remove('show');
+}
+function saveEngagement(idx){
+  const ps=getPS(idx);
+  const getVal=(id)=>{const el=document.getElementById(id);return el?parseInt(el.value)||0:0;};
+  ps.engagement={likes:getVal(`engLikes_${idx}`),comments:getVal(`engComments_${idx}`),shares:getVal(`engShares_${idx}`)};
+  save();
+  const row=document.getElementById(`engSaveRow_${idx}`);
+  if(row)row.classList.remove('show');
+  const msg=document.getElementById(`engSavedMsg_${idx}`);
+  if(msg){msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2000);}
+  renderFbPreview(idx);
+}
+
+/* GROUP CARDS */
+function startLeftEdit(idx,gi){state[`el_${idx}_${gi}`]=true;renderDetail(idx);const el=document.getElementById(`gname_${idx}_${gi}`);if(el)el.focus();}
+function cancelLeftEdit(idx,gi){delete state[`el_${idx}_${gi}`];renderDetail(idx);}
+function saveLeftCard(idx,gi){
+  const name=(document.getElementById(`gname_${idx}_${gi}`)?.value||'').trim();
+  const url=(document.getElementById(`gurl_${idx}_${gi}`)?.value||'').trim();
+  getPS(idx).groups[gi].name=name;getPS(idx).groups[gi].url=url;
+  delete state[`el_${idx}_${gi}`];save();renderDetail(idx);
+}
+async function handlePostLink(idx,gi){
+  const input=document.getElementById(`plink_${idx}_${gi}`);const url=input?input.value.trim():'';if(!url)return;
+  const ps=getPS(idx);ps.groups[gi].postUrl=url;ps.groups[gi].postName='';save();renderDetail(idx);
+  const name=await fetchGroupName(url);ps.groups[gi].postName=name;
+  const filled=ps.groups.filter(g=>g.postUrl&&g.postUrl.trim()).length;
+  if(filled>=1&&(ps.status==='approved'||ps.status==='pending'))ps.status='posted';
+  save();renderDetail(idx);refreshCal();updateStats();
+}
+function clearPostLink(idx,gi){
+  const ps=getPS(idx);ps.groups[gi].postUrl='';ps.groups[gi].postName='';
+  if(!ps.groups.some(g=>g.postUrl)&&ps.status==='posted')ps.status='approved';
+  save();renderDetail(idx);refreshCal();updateStats();
+}
+async function fetchGroupName(url){
+  try{const u=new URL(url);const parts=u.pathname.split('/').filter(Boolean);const gi=parts.indexOf('groups');if(gi!==-1&&parts[gi+1]){const raw=parts[gi+1];if(/^\d+$/.test(raw))return'Facebook Group';return raw.replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());}return u.hostname.replace('www.','');}catch(e){return'View Post';}
+}
+
+/* ACTIONS */
+function setStatus(idx,status){getPS(idx).status=status;save();renderDetail(idx);refreshCal();updateStats();}
+function addComment(idx){
+  const input=document.getElementById(`commentInput_${idx}`);const text=input.value.trim();if(!text)return;
+  getPS(idx).comments.push({text,time:ts()});save();
+  input.value='';
+
+  const ps=getPS(idx);
+  const commentCount=ps.comments.length;
+  const isRevision=ps.status==='revision';
+
+  // Re-render comment list
+  const list=document.getElementById(`commentsList_${idx}`);
+  if(list){list.innerHTML=ps.comments.map((c,ci)=>`<div class="comment-bubble">${escHtml(c.text)}<div class="comment-meta">${c.time}</div><button class="comment-delete" onclick="deleteComment(${idx},${ci})">&#x2715;</button></div>`).join('');}
+
+  // Update footer hint
+  const hint=document.querySelector('.comment-count-hint');
+  if(hint&&commentCount>0)hint.innerHTML=`<strong>${commentCount}</strong> comment${commentCount>1?'s':''} added &mdash; add more here`;
+
+  // Update placeholder
+  input.placeholder=isRevision?'Add another revision note...':'Add another comment...';
+  const area=document.querySelector('.comment-input-area');
+  if(area&&isRevision)area.classList.add('revision-mode');
+
+  // Pulse the inline "✓ Added" confirmation inside the footer bar
+  const confirm=document.getElementById('sentConfirm_'+idx);
+  if(confirm){
+    confirm.classList.remove('show');
+    void confirm.offsetWidth; // reflow to restart animation
+    confirm.classList.add('show');
+  }
+}
+function deleteComment(idx,ci){getPS(idx).comments.splice(ci,1);save();renderDetail(idx);}
+function handlePhotoUpload(idx,input){
+  const ps=getPS(idx);if(!ps.photos)ps.photos=[];
+  Array.from(input.files).forEach(file=>{const r=new FileReader();r.onload=e=>{ps.photos.push(e.target.result);save();renderDetail(idx);};r.readAsDataURL(file);});
+}
+function removePhoto(idx,pi){getPS(idx).photos.splice(pi,1);save();renderDetail(idx);}
+
+/* CAPTION EDIT */
+function startCaptionEdit(idx){state['ce_'+idx]=true;if(state['cv_'+idx]===undefined)state['cv_'+idx]=POSTS[idx].caption;renderDetail(idx);const ta=document.getElementById('captionTA_'+idx);if(ta)ta.focus();}
+function cancelCaptionEdit(idx){delete state['ce_'+idx];renderDetail(idx);}
+function saveCaptionEdit(idx){const ta=document.getElementById('captionTA_'+idx);if(!ta)return;state['cv_'+idx]=ta.value;delete state['ce_'+idx];save();renderDetail(idx);renderFbPreview(idx);}
+
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escAttr(s){return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function ts(){return new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}
+
+buildCalendar();updateStats();
+</script>
+</body>
+</html>
